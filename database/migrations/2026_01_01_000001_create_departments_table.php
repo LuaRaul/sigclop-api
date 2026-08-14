@@ -6,24 +6,30 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('departments', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+
             $table->id();
-            $table->string('name');
-            $table->string('code')->unique();
-            $table->text('description')->nullable();
-            $table->boolean('active')->default(true);
+
+            $table->string('name', 150);
+
+            $table->string('code', 50)
+                ->unique();
+
+            $table->text('description')
+                ->nullable();
+
+            $table->boolean('active')
+                ->default(true);
+
             $table->timestamps();
+
+            $table->index('active');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('departments');

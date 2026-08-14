@@ -22,47 +22,75 @@ class AuthController extends Controller
 
         if (! $user || ! Hash::check($credentials['password'], $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['As credenciais informadas nao sao validas.'],
+                'email' => ['As credenciais informadas não são válidas.'],
             ]);
         }
 
         if (! $user->active) {
             throw ValidationException::withMessages([
-                'email' => ['Este utilizador esta inactivo.'],
+                'email' => ['Este utilizador encontra-se inactivo.'],
             ]);
         }
 
         ActivityLog::create([
-            'user_id' => $user->id,
-            'action' => 'Iniciou sessao',
-            'entity' => 'User',
+            'user_id'   => $user->id,
+            'action'    => 'Iniciou sessão',
+            'entity'    => 'User',
             'entity_id' => $user->id,
-            'metadata' => ['ip' => $request->ip()],
+            'metadata'  => [
+                'ip' => $request->ip(),
+            ],
         ]);
 
+        $token = $user->createToken('sigclop')->plainTextToken;
+
+        $user->load('department');
+
         return response()->json([
-            'token' => $user->createToken('sigclop')->plainTextToken,
-            'user' => $user->load('department'),
+            'token' => $token,
+
+            'user' => $user,
+
+            'roles' => $user->getRoleNames()->values(),
+
+            'permissions' => $user->getAllPermissions()
+                ->pluck('name')
+                ->values(),
         ]);
     }
 
     public function me(Request $request)
     {
-        return response()->json($request->user()->load('department'));
+        $user = $request->user()->load('department');
+
+        return response()->json([
+
+            'user' => $user,
+
+            'roles' => $user->getRoleNames()->values(),
+
+            'permissions' => $user->getAllPermissions()
+                ->pluck('name')
+                ->values(),
+        ]);
     }
 
     public function logout(Request $request)
     {
         ActivityLog::create([
-            'user_id' => $request->user()->id,
-            'action' => 'Terminou sessao',
-            'entity' => 'User',
+            'user_id'   => $request->user()->id,
+            'action'    => 'Terminou sessão',
+            'entity'    => 'User',
             'entity_id' => $request->user()->id,
-            'metadata' => ['ip' => $request->ip()],
+            'metadata'  => [
+                'ip' => $request->ip(),
+            ],
         ]);
 
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => 'Sessao terminada com sucesso.']);
+        return response()->json([
+            'message' => 'Sessão terminada com sucesso.',
+        ]);
     }
 }

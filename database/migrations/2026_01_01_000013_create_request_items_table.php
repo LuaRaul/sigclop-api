@@ -6,26 +6,39 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('request_items', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+
             $table->id();
-            $table->foreignId('internal_request_id')->constrained()->cascadeOnDelete();
-            $table->unsignedBigInteger('product_id')->nullable();
+
+            $table->foreignId('internal_request_id')
+                ->constrained('internal_requests')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+
+            $table->foreignId('product_id')
+                ->nullable()
+                ->constrained('products')
+                ->nullOnDelete()
+                ->cascadeOnUpdate();
+
             $table->string('description')->nullable();
+
             $table->unsignedInteger('quantity_requested');
-            $table->unsignedInteger('quantity_approved')->nullable();
+
+            $table->unsignedInteger('quantity_approved')
+                ->nullable();
+
             $table->text('notes')->nullable();
+
             $table->timestamps();
+
+            $table->index('product_id');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('request_items');
