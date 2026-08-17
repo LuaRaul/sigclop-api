@@ -52,7 +52,7 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('departments.create');
+        abort_unless($request->user()?->can('sectores.criar'), 403, 'Não possui permissão para criar sectores.');
 
         $data = $request->validate([
 
@@ -122,7 +122,7 @@ class DepartmentController extends Controller
      */
     public function show(Department $department)
     {
-        $this->authorize('departments.view');
+        abort_unless(request()->user()?->can('sectores.visualizar'), 403, 'Não possui permissão para visualizar sectores.');
 
         return $department->load([
 
@@ -142,7 +142,7 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, Department $department)
     {
-        $this->authorize('departments.update');
+        abort_unless($request->user()?->can('sectores.editar'), 403, 'Não possui permissão para editar sectores.');
 
         $data = $request->validate([
 
@@ -230,7 +230,7 @@ class DepartmentController extends Controller
      */
     public function destroy(Department $department)
     {
-        $this->authorize('departments.delete');
+        abort_unless(request()->user()?->can('sectores.eliminar'), 403, 'Não possui permissão para eliminar sectores.');
 
         if ($department->users()->exists()) {
 

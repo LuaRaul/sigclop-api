@@ -130,6 +130,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'distribuicao.aprovar',
             'distribuicao.entregar',
             'distribuicao.cancelar',
+            'distribuicao.eliminar',
             'distribuicao.plano',
 
             /*
@@ -275,6 +276,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'utensilios.visualizar',
             'utensilios.criar',
             'utensilios.editar',
+
+            'sectores.visualizar',
 
             'armazem.visualizar_stock',
             'armazem.entrada_stock',

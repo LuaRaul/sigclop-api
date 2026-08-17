@@ -125,22 +125,22 @@ Route::middleware('auth:sanctum')->group(function () {
     */
 
     Route::get('/departments', [DepartmentController::class, 'index'])
-        ->middleware('permission:departamentos.visualizar');
+        ->middleware('permission:sectores.visualizar');
 
     Route::post('/departments', [DepartmentController::class, 'store'])
-        ->middleware('permission:departamentos.criar');
+        ->middleware('permission:sectores.criar');
 
     Route::get('/departments/{department}', [DepartmentController::class, 'show'])
-        ->middleware('permission:departamentos.visualizar');
+        ->middleware('permission:sectores.visualizar');
 
     Route::put('/departments/{department}', [DepartmentController::class, 'update'])
-        ->middleware('permission:departamentos.editar');
+        ->middleware('permission:sectores.editar');
 
     Route::patch('/departments/{department}', [DepartmentController::class, 'update'])
-        ->middleware('permission:departamentos.editar');
+        ->middleware('permission:sectores.editar');
 
     Route::delete('/departments/{department}', [DepartmentController::class, 'destroy'])
-        ->middleware('permission:departamentos.eliminar');
+        ->middleware('permission:sectores.eliminar');
 
 
     /*
@@ -175,22 +175,22 @@ Route::middleware('auth:sanctum')->group(function () {
     */
 
     Route::get('/products', [ProductController::class, 'index'])
-        ->middleware('permission:produtos.visualizar');
+        ->middleware('permission:utensilios.visualizar');
 
     Route::post('/products', [ProductController::class, 'store'])
-        ->middleware('permission:produtos.criar');
+        ->middleware('permission:utensilios.criar');
 
     Route::get('/products/{product}', [ProductController::class, 'show'])
-        ->middleware('permission:produtos.visualizar');
+        ->middleware('permission:utensilios.visualizar');
 
     Route::put('/products/{product}', [ProductController::class, 'update'])
-        ->middleware('permission:produtos.editar');
+        ->middleware('permission:utensilios.editar');
 
     Route::patch('/products/{product}', [ProductController::class, 'update'])
-        ->middleware('permission:produtos.editar');
+        ->middleware('permission:utensilios.editar');
 
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])
-        ->middleware('permission:produtos.eliminar');
+        ->middleware('permission:utensilios.eliminar');
 
 
     /*
