@@ -194,6 +194,11 @@ class RolesAndPermissionsSeeder extends Seeder
     |--------------------------------------------------------------------------
     */
 
+        $administrador = Role::firstOrCreate([
+            'name' => 'administrador',
+            'guard_name' => 'web'
+        ]);
+
         $directorGeral = Role::firstOrCreate([
             'name' => 'director_geral',
             'guard_name' => 'web'
@@ -220,8 +225,30 @@ class RolesAndPermissionsSeeder extends Seeder
     |--------------------------------------------------------------------------
     */
 
-        // Director Geral
-        $directorGeral->syncPermissions(Permission::all());
+        // Administrador do sistema: utilizadores, perfis e configuração de acessos.
+        $administrador->syncPermissions(Permission::all());
+
+        // Director Geral: autoridade de aprovação e monitorização institucional.
+        // A administração técnica de contas/perfis fica separada neste papel.
+        $directorGeral->syncPermissions([
+            'dashboard.nacional',
+            'pedidos.visualizar',
+            'pedidos.aprovar',
+            'pedidos.rejeitar',
+            'pedidos.reencaminhar',
+            'pedidos.concluir',
+            'documentos.visualizar',
+            'utensilios.visualizar',
+            'armazem.visualizar_stock',
+            'distribuicao.visualizar',
+            'distribuicao.plano',
+            'relatorios.visualizar',
+            'relatorios.exportar',
+            'sectores.visualizar',
+            'efectivos.visualizar',
+            'prisioneiros.visualizar',
+            'auditoria.visualizar',
+        ]);
 
         // Director
         $director->syncPermissions([

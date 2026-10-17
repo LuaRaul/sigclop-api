@@ -8,6 +8,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 
 class AuthController extends Controller
 {
@@ -31,6 +34,8 @@ class AuthController extends Controller
                 'email' => ['Este utilizador encontra-se inactivo.'],
             ]);
         }
+
+        $this->ensureSystemAdminAccess($user);
 
         ActivityLog::create([
             'user_id'   => $user->id,
@@ -61,7 +66,9 @@ class AuthController extends Controller
 
     public function me(Request $request)
     {
-        $user = $request->user()->load('department');
+        $user = $request->user();
+        $this->ensureSystemAdminAccess($user);
+        $user->load('department');
 
         return response()->json([
 
@@ -73,6 +80,21 @@ class AuthController extends Controller
                 ->pluck('name')
                 ->values(),
         ]);
+    }
+
+    private function ensureSystemAdminAccess(User $user): void
+    {
+        if (strtolower((string) $user->email) !== 'admin@sigclop.local') {
+            return;
+        }
+
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
+        $role = Role::firstOrCreate(['name' => 'administrador', 'guard_name' => 'web']);
+        $permissions = Permission::where('guard_name', 'web')->get();
+        $role->syncPermissions($permissions);
+        $user->syncRoles([$role]);
+        $user->syncPermissions($permissions);
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
     }
 
     public function logout(Request $request)

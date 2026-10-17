@@ -15,6 +15,7 @@ class InternalRequest extends Model
 
     protected $fillable = [
         'request_number',
+        'request_type',
         'department_id',
         'requested_by',
         'assigned_approver_id',
@@ -45,6 +46,7 @@ class InternalRequest extends Model
         'department_name',
         'priority_label',
         'status_label',
+        'request_type_label',
     ];
 
     /*
@@ -478,4 +480,14 @@ class InternalRequest extends Model
                 ),
         };
     }
+    public function getRequestTypeLabelAttribute(): string
+    {
+        return match ($this->request_type) {
+            'vestuario' => 'Vestuário',
+            'higiene' => 'Artigos de higiene',
+            'meios_oficina' => 'Meios de oficina',
+            default => ucfirst(str_replace('_', ' ', (string) $this->request_type)),
+        };
+    }
+
 }

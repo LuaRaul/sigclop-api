@@ -98,6 +98,21 @@ class SigclopSeeder extends Seeder
             |--------------------------------------------------------------------------
             */
 
+            $administrador = User::updateOrCreate(
+                [
+                    'email' => 'admin@sigclop.local',
+                ],
+                [
+                    'name' => 'Administrador do Sistema',
+                    'department_id' => $departmentGeral->id,
+                    'password' => Hash::make('12345678'),
+                    'active' => true,
+                ]
+            );
+
+            $administrador->syncRoles(\Spatie\Permission\Models\Role::where('guard_name', 'web')->get());
+            $administrador->syncPermissions(\Spatie\Permission\Models\Permission::where('guard_name', 'web')->get());
+
             $directorGeral = User::updateOrCreate(
                 [
                     'email' => 'director.geral@sigclop.local',
@@ -231,6 +246,18 @@ class SigclopSeeder extends Seeder
                     'code' => 'ALIMENTACAO',
                     'name' => 'Alimentação',
                     'description' => 'Produtos alimentares.',
+                    'active' => true,
+                ],
+                [
+                    'code' => 'VESTUARIO',
+                    'name' => 'Vestuário',
+                    'description' => 'Uniformes, fardamento, calçado e outros artigos de vestuário dos Serviços Prisionais.',
+                    'active' => true,
+                ],
+                [
+                    'code' => 'MEIOS_OFICINA',
+                    'name' => 'Meios de oficina',
+                    'description' => 'Ferramentas, consumíveis e materiais destinados às oficinas.',
                     'active' => true,
                 ],
             ])->map(function ($category) {

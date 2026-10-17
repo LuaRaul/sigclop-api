@@ -15,6 +15,8 @@ class StoreInternalRequestRequest extends FormRequest
     {
         return [
 
+            'request_type' => ['required', 'string', 'in:vestuario,higiene,meios_oficina'],
+
             'department_id' => ['nullable', 'integer'],
 
             'assigned_approver_id' => [

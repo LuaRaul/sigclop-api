@@ -400,6 +400,9 @@ class InternalRequestController extends Controller
                         'request_number' =>
                             $requestNumber,
 
+                        'request_type' =>
+                            $data['request_type'],
+
                         'department_id' =>
                             $departmentId,
 

@@ -142,6 +142,12 @@ class LookupController extends Controller
 
             'departments' => Department::orderBy('name')->get(),
 
+            'request_types' => [
+                ['value' => 'vestuario', 'label' => 'Vestuário'],
+                ['value' => 'higiene', 'label' => 'Artigos de higiene'],
+                ['value' => 'meios_oficina', 'label' => 'Meios de oficina'],
+            ],
+
             /*
             |--------------------------------------------------------------------------
             | Categorias Documentais

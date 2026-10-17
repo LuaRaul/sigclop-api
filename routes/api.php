@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\StockMovementController;
 use App\Http\Controllers\Api\SupplierController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ApprovalController;
+use App\Http\Controllers\Api\AccessManagementController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -57,6 +58,25 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | GESTÃO DE PERFIS, PERMISSÕES E ACESSOS (ADMINISTRADOR DO SISTEMA)
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('access-management')->controller(AccessManagementController::class)->group(function () {
+        Route::get('/', 'overview');
+        Route::get('/roles', 'roles');
+        Route::post('/roles', 'storeRole');
+        Route::put('/roles/{role}', 'updateRole');
+        Route::delete('/roles/{role}', 'destroyRole');
+        Route::get('/permissions', 'permissions');
+        Route::post('/permissions', 'storePermission');
+        Route::put('/permissions/{permission}', 'updatePermission');
+        Route::delete('/permissions/{permission}', 'destroyPermission');
+        Route::get('/users/{user}', 'userAccess');
+        Route::put('/users/{user}', 'updateUserAccess');
+    });
 
 
     /*
